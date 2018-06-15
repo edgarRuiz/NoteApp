@@ -7,18 +7,20 @@
 //
 
 import UIKit
+import CoreData
 
 class TableViewController: UITableViewController {
 
-    var titles : [String] = [];
+    var names : [String] = [];
+    var categories : [Category] = [Category]();
+    
+    let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext;
+
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Uncomment the following line to preserve selection between presentations
-        // self.clearsSelectionOnViewWillAppear = false
-
-        // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-        // self.navigationItem.rightBarButtonItem = self.editButtonItem
+        loadCats();
+        tableView.reloadData();
     }
 
     override func didReceiveMemoryWarning() {
@@ -35,14 +37,14 @@ class TableViewController: UITableViewController {
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
-        return titles.count;
+        return names.count;
     }
 
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "titleCell", for: indexPath)
 
-        cell.textLabel?.text = titles[indexPath.row];
+        cell.textLabel?.text = names[indexPath.row];
         
         return cell
     }
@@ -92,14 +94,26 @@ class TableViewController: UITableViewController {
         // Pass the selected object to the new view controller.
     }
     */
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        performSegue(withIdentifier: "goToNote", sender: self);
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        let vc = segue.destination as! ViewController;
+        vc.noteTitle = names[(tableView.indexPathForSelectedRow?.row)!]
+        
+    }
+    
     @IBAction func addButtonPressed(_ sender: Any) {
         
         let uiAlert = UIAlertController(title: "Add a note title", message: "Test", preferredStyle: .alert);
         uiAlert.addAction(UIAlertAction(title: "Add", style: .default, handler: { (action) in
-            self.titles.append(uiAlert.textFields![0].text!);
-            for title in self.titles{
-                print(title);
-            }
+            self.names.append(uiAlert.textFields![0].text!);
+            let cat = Category(context: self.context);
+            cat.name = uiAlert.textFields![0].text!
+            self.categories.append(cat);
+            self.saveItems();
             self.tableView.reloadData();
             
         }));
@@ -122,6 +136,28 @@ class TableViewController: UITableViewController {
 //            }
 //        }))
 
+    }
+    
+    func saveItems(){
+        
+        do{
+            try context.save()
+        }catch{
+            print(error);
+        }
+        
+    }
+    
+    func loadCats(){
+        print("here brahs")
+        let request : NSFetchRequest<Category> = Category.fetchRequest();
+        
+        do{
+            categories = try context.fetch(request);
+        }catch{
+            print(error)
+        }
+        
     }
     
 }

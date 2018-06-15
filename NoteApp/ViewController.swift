@@ -7,14 +7,20 @@
 //
 
 import UIKit
+import CoreData
 
 class ViewController: UIViewController {
 
+    let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext;
+    var note : [Note] = [Note]();
+    @IBOutlet weak var titleTextField: UITextField!
     @IBOutlet weak var textView: UITextView!
+    var noteTitle: String?;
     
     override func viewDidLoad() {
         super.viewDidLoad()
         print(textView.text)
+        titleTextField.text = noteTitle;
         // Do any additional setup after loading the view, typically from a nib.
     }
 
