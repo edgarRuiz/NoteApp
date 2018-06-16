@@ -21,7 +21,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" misplaced="YES" text="Placeholder" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="8Kq-tP-pQI">
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" misplaced="YES" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="8Kq-tP-pQI">
                                 <rect key="frame" x="0.0" y="152" width="414" height="584"/>
                                 <color key="backgroundColor" red="0.76068580150604248" green="0.92607754468917847" blue="0.65577727556228638" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
