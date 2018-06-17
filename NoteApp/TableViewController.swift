@@ -55,6 +55,7 @@ class TableViewController: UITableViewController {
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        print("preparetosegueeeee!!@#!@#")
         let vc = segue.destination as! ViewController;
         vc.category = categories[(tableView.indexPathForSelectedRow!.row)];
         

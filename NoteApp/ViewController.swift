@@ -14,6 +14,7 @@ class ViewController: UIViewController {
     let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext;
     
     var notes : [Note] = [Note]();
+    var note : Note?;
     @IBOutlet weak var titleTextField: UITextField!
     @IBOutlet weak var textView: UITextView!
     var category: Category?;
@@ -21,9 +22,9 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         titleTextField.text = category!.name;
-//        if(category?.newRelationship != nil){
-//            loadNote();
-//        }
+        if(category?.note != nil){
+            loadNote();
+        }
     
         // Do any additional setup after loading the view, typically from a nib.
     }
@@ -38,11 +39,27 @@ class ViewController: UIViewController {
     }
 
     func saveNotes(){
-        if(category?.newRelationship != nil){
+        if(category?.note != nil){
+            print("no longer nul")
+            
+            let request : NSFetchRequest<Note> = Note.fetchRequest();
+            request.predicate = NSPredicate(format: "title MATCHES %@", (titleTextField?.text!)!)
+            
+            do{
+                notes = try context.fetch(request);
+                print(notes.count)
+            }catch{
+                print("error")
+            }
+            
+            note = notes[0];
+            note?.body = textView.text
+            
+            
             
             
             do{
-                //try context.save()
+                try context.save()
                 print("Saved successfully");
             }catch{
                 print(error);
@@ -51,7 +68,7 @@ class ViewController: UIViewController {
             print("It is null")
             let note = Note(context:context);
             note.body = textView.text;
-            note.newRelationship = category;
+            note.category = category;
             note.title = category?.name;
             do{
                 try context.save()
@@ -67,7 +84,7 @@ class ViewController: UIViewController {
     func loadNote(){
         
         let request : NSFetchRequest<Note> = Note.fetchRequest();
-        request.predicate = NSPredicate(format: "newRelationship.name MATCHES %@", (category?.name!)!)
+        request.predicate = NSPredicate(format: "category.name MATCHES %@", (category?.name!)!)
         
         do{
             notes = try context.fetch(request);
@@ -82,7 +99,7 @@ class ViewController: UIViewController {
             print(x);
             x = x+1;
         }
-        textView.text = notes[0].body
+       textView.text = notes[0].body
     }
     
 }
